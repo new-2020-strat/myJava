@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+xmlns 前缀别名="http://www.module.xml.xmlBasic.constraint/xml" 起前缀别名
+-->
+<students   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://www.module.xml.xmlBasic.constraint/xml"
+            xsi:schemaLocation="http://www.module.xml.xmlBasic.constraint/xml student.xsd">
+    <student number="qilvbin_0000">
+        <name>zahngsan</name>
+        <age>26</age>
+        <sex>male</sex>
+    </student>
+</students>
