@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xsd:schema xmlns="http://www.module.xml.xmlBasic.constraint/xml"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.module.xml.xmlBasic.constraint/xml" elementFormDefault="qualified">
+    <xsd:element name="students" type="studentsType"/><!--定义一个students元素,自定义类型为studentsType-->
+    <xsd:complexType name="studentsType"><!--声明studentsType类型-->
+        <xsd:sequence><!--按顺序出现-->
+            <!--指定students子标签student，自定义类型为studentType,最小出现0次，最多出现不限定-->
+            <xsd:element name="student" type="studentType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="studentType">
+        <xsd:sequence>
+            <xsd:element name="name" type="xsd:string"/>
+            <xsd:element name="age" type="ageType"/>
+            <xsd:element name="sex" type="sexType"/>
+        </xsd:sequence>
+        <xsd:attribute name="number" type="numberType" use="required"/>
+    </xsd:complexType>
+    <xsd:simpleType name="ageType">
+        <xsd:restriction base="xsd:integer">
+            <xsd:minInclusive value="0"/>
+            <xsd:maxInclusive value="256"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="sexType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="male"/>
+            <xsd:enumeration value="female"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="numberType">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="qilvbin_\d{4}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+</xsd:schema>
