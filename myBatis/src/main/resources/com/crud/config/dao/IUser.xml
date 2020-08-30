@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.crud.config.dao.IUser">
+    <!--查询-->
+    <select id="selectAll" resultType="com.crud.config.entity.User">
+        select * from  user;
+    </select>
+    <!--插入-->
+    <insert id="insertUser" parameterType="com.crud.config.entity.User">
+        insert into user(username,sex,birthday,address)
+        values (#{userName},#{sex},#{birthday},#{address})
+    </insert>
+    <!--更新-->
+    <update id="updateUser" parameterType="com.crud.config.entity.User">
+        update user set sex = #{sex} where username=#{userName};
+    </update>
+    <!--删除-->
+    <delete id="deleteUser" parameterType="java.lang.Integer">
+        delete from user where id=#{id};<!--当参数只有一个时，Id只是一个占位符-->
+    </delete>
+    <!--模糊查询-->
+    <select id="queryByDim" parameterType="java.lang.String" resultType="com.crud.config.entity.User">
+        select * from user where username like #{userName};
+    </select>
+    <!--OGNL表达式：实体类中包装类-->
+    <select id="findUser" parameterType="com.crud.config.entity.Users" resultType="com.crud.config.entity.User">
+        select * from  user where username =#{user.userName};
+    </select>
+</mapper>

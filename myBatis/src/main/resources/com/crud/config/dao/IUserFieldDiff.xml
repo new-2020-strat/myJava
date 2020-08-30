@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.crud.config.dao.IUserFieldDiff">
+    <!--解决实体类和数据库列名不一致问题：
+      1.给数据库列名取别名，和实体类一致，-->
+      <select id="selectAllUserNamed" resultType="com.crud.config.entity.UserFieldDiff">
+         select id as id_new,username as username_new,birthday as birthday_new,sex as sex_new,address as address_new from  user
+     </select>
+      <!--2.配置实体类属性和数据库列名的对应关系-->
+    <resultMap id="userMap" type="com.crud.config.entity.UserFieldDiff">
+        <!--主键-->
+        <id property="id_new" column="id"/>
+        <result property="userName_new" column="username"/>
+        <result property="sex_new" column="sex"/>
+        <result property="birthday_new" column="birthday"/>
+        <result property="address_new" column="address"/>
+    </resultMap>
+    <select id="selectAllUserMap" resultMap="userMap">
+        select * from user;
+    </select>
+</mapper>

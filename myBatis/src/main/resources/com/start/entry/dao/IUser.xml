@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 执行sql语句的信息，就可以有PrepareStatement
+还具备封装的实体类全限定类名，解析配置文件所用到的技术就是xml的解析技术，
+此处用到的是dom4j解析技术
+-->
+<mapper namespace="com.start.entry.dao.IUserConfig">
+    <!--查询-->
+    <select id="findAllUser" resultType="com.start.entry.entity.User">
+        select * from  user;
+    </select>
+</mapper>
