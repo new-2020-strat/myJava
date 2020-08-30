@@ -30,7 +30,7 @@ public class TestFieldDiff {
     @Before
     public void init() throws IOException{
         //1.读取mybatis的配置文件
-        in = Resources.getResourceAsStream("com\\crud\\sqlMapConfig.xml");
+        in = Resources.getResourceAsStream("com\\crud\\config\\sqlMapConfig.xml");
         //2.创建SqlSessionFactory工厂
         builder = new SqlSessionFactoryBuilder();
         factory = builder.build(in);

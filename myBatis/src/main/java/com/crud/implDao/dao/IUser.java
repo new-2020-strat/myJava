@@ -1,7 +1,6 @@
 package com.crud.implDao.dao;
 
-import com.crud.config.entity.User;
-import com.crud.config.entity.Users;
+import com.crud.implDao.entity.User;
 
 import java.util.List;
 
@@ -39,15 +38,9 @@ public interface IUser {
     public List<User> queryByDim(String username);
 
     /**
-     * OGNL表达式查询
-     * @param users
+     * 查询一条
+     * @param id
      * @return
      */
-    public  List<User> findUser(Users users);
-
-    /**
-     * 实体类与数据库列名不一致查询
-     * @return
-     */
-    public List<User> findall();
+    public User selectOne(Integer id);
 }

@@ -46,6 +46,5 @@
     <mappers>
         <!--<mapper resource="com/crud/dao/IUser.xml"/>-->
         <package name="com.crud.config.dao"/>
-        <!--<mapper resource="com/crud/implDao/IUser.xml"/>-->
     </mappers>
 </configuration>

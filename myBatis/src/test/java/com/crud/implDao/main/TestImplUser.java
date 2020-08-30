@@ -1,8 +1,7 @@
-package com.crud.config.main;
+package com.crud.implDao.main;
 
-import com.crud.config.dao.IUser;
-import com.crud.config.entity.Users;
-import com.crud.config.entity.User;
+import com.crud.implDao.dao.IUser;
+import com.crud.implDao.entity.User;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -16,10 +15,7 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
-/**
- * 测试增删改查(crud)
- */
-public class TestCrud {
+public class TestImplUser {
     private InputStream in;
     private SqlSessionFactoryBuilder builder;
     private SqlSessionFactory factory;
@@ -33,10 +29,10 @@ public class TestCrud {
     @Before
     public void init() throws IOException{
         //1.读取mybatis的配置文件
-         in = Resources.getResourceAsStream("com\\crud\\config\\sqlMapConfig.xml");
+        in = Resources.getResourceAsStream("com\\crud\\implDao\\sqlMapImplDao.xml");
         //2.创建SqlSessionFactory工厂
-         builder = new SqlSessionFactoryBuilder();
-         factory = builder.build(in);
+        builder = new SqlSessionFactoryBuilder();
+        factory = builder.build(in);
         //3.使用工厂生产SqlSession对象
         session = factory.openSession();
         //4.使用SqlSession创建Dao接口的代理对象
@@ -64,19 +60,17 @@ public class TestCrud {
         for (User user:users){
             System.out.println(user);
         }
-
     }
-
     /**
      * 测试插入方法
      */
     @Test
     public void TestInsertUser() {
         User user = new User();
-        user.setUserName("老吕");
-        user.setSex('男');
+        user.setUserName("小婷");
+        user.setSex('女');
         user.setBirthday(new Date());
-        user.setAddress("贵州");
+        user.setAddress("云南");
         //5.使用代理对象执行方法
         Integer number = iUser.insertUser(user);
         //提交事务
@@ -91,7 +85,7 @@ public class TestCrud {
     public void testUpdateUser(){
         User user = new User();
         user.setUserName("老吕");
-        user.setSex('女');
+        user.setSex('男');
         //5.使用代理对象执行方法
         Integer num = iUser.updateUser(user);
         //提交事务
@@ -104,39 +98,28 @@ public class TestCrud {
      */
     @Test
     public void testDeleteUser(){
-        Integer nun = iUser.deleteUser(41);
+        Integer nun = iUser.deleteUser(44);
         session.commit();
         System.out.println("删除数量:"+nun);
     }
-
     /**
      * 模糊查询测试
      */
     @Test
-    public void TestQueryByDim(){
-        List<User> users = iUser.queryByDim("%祁%");//执行xml配置方式的findall方法
+    public void testQueryByDim(){
+        List<User> users = iUser.queryByDim("%祁%");
         for(User user:users){
             System.out.println(user);
         }
     }
 
-    @Test //OGNL表达式查询
-    public  void findUser(){
-        Users users = new Users();
-        User user = new User();
-        user.setUserName("老祁");
-        users.setUser(user);
-        List<User> list = iUser.findUser(users);
-        for(User u:list){
-            System.out.println(u);
-        }
-    }
-
     /**
-     * 查询所有(实体类个别名不一致)
+     * 测试查询一条
      */
     @Test
-    public void testFieldDifferent(){
-
+    public void testSelectOne(){
+        User user = iUser.selectOne(26);
+        System.out.println(user);
     }
+
 }
