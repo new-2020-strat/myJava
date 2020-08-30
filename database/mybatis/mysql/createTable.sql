@@ -13,5 +13,6 @@ create table user (
 insert into user(id,username,birthday,sex,address) values(41,'老王','2020-08-20 20:48:50','男','云南');
 insert into user(id,username,birthday,sex,address) values(26,'老祁','2020-08-28 22:25:13','男','四川');
 select * from user;
+select  * from user where id = 26;
 
 rollback ;
