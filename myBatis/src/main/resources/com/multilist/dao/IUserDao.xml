@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.multilist.dao.IUserDao">
+    <!--查询-->
+    <select id="selectAllUser" resultType="user">
+        select * from  user;
+    </select>
+    <!--通过id查询-->
+    <select id="selectAll" parameterType="INT" resultType="user">
+        select * from  user where id = #{id};
+    </select>
+
+    <!--一对多，一个用户有多个账户的查询所有用户-->
+    <select id="selectAllUserWithAllAccount" resultMap="UserWithAllAccount">
+        select u.*,a.id aid,a.uid,a.money from user u left outer join account a on u.id=a.uid;
+    </select>
+    <resultMap id="UserWithAllAccount" type="user">
+        <id property="id" column="id"/>
+        <result property="userName" column="username"/>
+        <result property="birthday" column="birthday"/>
+        <result property="sex" column="sex"/>
+        <result property="address" column="address"/>
+        <!--配置User实体中accounts集合的映射-->
+        <collection property="accounts" ofType="account">
+            <id property="id" column="aid"/>
+            <result property="uid" column="uid"/>
+            <result property="money" column="money"/>
+        </collection>
+    </resultMap>
+</mapper>

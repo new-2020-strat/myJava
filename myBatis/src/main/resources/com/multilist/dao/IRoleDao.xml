@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.multilist.dao.IRoleDao">
+        <!--定义映射关系-->
+        <resultMap id="roleMap" type="role">
+            <id property="roleId" column="id"/>
+            <result property="roleName" column="role_name"/>
+            <result property="roleDesc" column="role_desc"/>
+        </resultMap>
+        <!--查询所有角色-->
+        <select id="selectAllRole" resultMap="roleMap">
+            select * from role;
+        </select>
+        <!--定义映射关系-->
+        <resultMap id="roleCustomerMap" type="role">
+            <id property="roleId" column="rid"/>
+            <result property="roleName" column="role_name"/>
+            <result property="roleDesc" column="role_desc"/>
+            <collection property="customers" ofType="customer">
+                <id property="id" column="id"/>
+                <result property="userName" column="username"/>
+                <result property="birthday" column="birthday"/>
+                <result property="sex" column="sex"/>
+                <result property="address" column="address"/>
+            </collection>
+        </resultMap>
+        <!--查询当前角色并且带有该角色所属用户-->
+        <select id="selectAllRoleWithUser" resultMap="roleCustomerMap">
+            select r.id rid,r.role_name,r.role_desc,c.* from role r
+            left outer join customer_role cr on r.id=cr.rid
+            left outer join customer c on cr.cid=c.id
+        </select>
+
+
+</mapper>

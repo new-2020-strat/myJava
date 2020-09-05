@@ -38,7 +38,7 @@ public class TestCrud {
          builder = new SqlSessionFactoryBuilder();
          factory = builder.build(in);
         //3.使用工厂生产SqlSession对象
-        session = factory.openSession();
+        session = factory.openSession();//传入一个true值可设为事务自动提交
         //4.使用SqlSession创建Dao接口的代理对象
         iUser = session.getMapper(IUser.class);
 

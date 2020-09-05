@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dynamicSql.dao.IUser">
+    <!--查询-->
+    <select id="selectUserByCondition" parameterType="user" resultType="User">
+        select * from  user
+        <!--where 1=1  &lt;!&ndash; 也可以将where 1=1改成<where>标签  &ndash;&gt;-->
+        where 1=1
+          <if test="userName!=null">
+              and username = #{userName}
+          </if>
+       <!-- <where>
+            <if test="userName!=null">
+                and username = #{userName}
+            </if>
+        </where>-->
+    </select>
+
+    <!--foreach标签，根据id的集合查询-->
+    <select id="selectUserByIdList"  resultType="user">
+        /*select * from users*/
+        <include refid="defaultUser"/>
+        <where>
+            <if test="list!=null and list.size()>0">
+                <foreach collection="list" open="id in (" close=")" item="id" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <!--抽取重复的sql语句-->
+    <sql id="defaultUser">
+        select * from user
+    </sql>
+</mapper>

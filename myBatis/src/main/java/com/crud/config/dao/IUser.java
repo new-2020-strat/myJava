@@ -50,4 +50,5 @@ public interface IUser {
      * @return
      */
     public List<User> findall();
+
 }
