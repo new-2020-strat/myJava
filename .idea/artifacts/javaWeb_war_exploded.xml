@@ -1,23 +1,27 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" name="javaWeb:war exploded">
-    <output-path>$PROJECT_DIR$/javaWeb/target/javaWeb</output-path>
+  <artifact type="exploded-war" name="javaweb:war exploded">
+    <output-path>$USER_HOME$/IdeaProjects/javaweb/target/javaweb</output-path>
     <properties id="maven-jee-properties">
       <options>
         <exploded>true</exploded>
-        <module>javaWeb</module>
+        <module>javaweb</module>
         <packaging>war</packaging>
       </options>
     </properties>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
-          <element id="module-output" name="javaWeb" />
+          <element id="module-output" name="javaweb" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Maven: org.mybatis:mybatis:3.4.5" />
+          <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.6" />
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/javaWeb/target/javaWeb/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$USER_HOME$/IdeaProjects/javaweb/target/javaweb/META-INF/MANIFEST.MF" />
       </element>
-      <element id="javaee-facet-resources" facet="javaWeb/web/Web" />
+      <element id="javaee-facet-resources" facet="javaweb/web/Web" />
     </root>
   </artifact>
 </component>
