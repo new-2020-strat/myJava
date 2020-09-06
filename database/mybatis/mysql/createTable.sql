@@ -15,6 +15,8 @@ insert into user(id,username,birthday,sex,address) values(41,'老王','2020-08-2
 insert into user(id,username,birthday,sex,address) values(28,'小李','2020-08-28 22:25:13','女','大理');
 commit;
 select * from user;
+select * from user where username like '%祁%';
+commit ;
 #创建账户表
 drop table if exists account;
 create table account(
