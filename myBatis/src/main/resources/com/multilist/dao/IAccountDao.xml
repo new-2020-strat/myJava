@@ -7,6 +7,10 @@
     <select id="selectAllAccount" resultType="account">
         select * from  account;
     </select>
+
+    <select id="selectAccountById" resultType="account" parameterType="INT">
+        select * from account where uid = #{uid};
+    </select>
     <!--查询所有账户并且带有该账户的所属用户的姓名和地址-->
     <select id="selectAllAccountWithUser" resultType="accountUser">
         select a.*,u.username,u.address from account a,user u where a.uid = u.id;
@@ -30,4 +34,19 @@
             <result property="address" column="address"/>
         </association>
     </resultMap>
+
+
+    <!--查询所有账户并且带有该账户的所属用户所有信息(延迟加载的实现)-->
+    <select id="selectAllAccountWithAllUserBuffer" resultMap="accountUserMap">
+        select * from account;
+    </select>
+    <!--定义封装Account和User的resultMap-->
+    <resultMap id="accountUserMapBuffer" type="account">
+        <id property="id" column="id"/>
+        <result property="uid" column="uid"/>
+        <result property="money" column="money"/>
+        <!--一对一关系映射，定义封装User实体内容-->
+        <association property="user" column="uid" javaType="user" select="com.multilist.dao.IUserDao.selectById"/>
+    </resultMap>
+
 </mapper>

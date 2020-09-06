@@ -7,6 +7,12 @@ import java.util.List;
 public interface IAccountDao {
 
     /**
+     * 查询account表所有通过uid
+     * @return
+     */
+    public List<Account> selectAccountById(Integer uid);
+
+    /**
      * 查询account表所有
      * @return
      */
@@ -23,4 +29,13 @@ public interface IAccountDao {
      * @return
      */
     public List<Account> selectAllAccountWithAllUser();
+
+    /**
+     * 查询所有账户并且带有该账户的所属用户所有信息(延迟加载)
+     * @return
+     */
+    public List<Account> selectAllAccountWithAllUserBuffer();
+
+
+
 }

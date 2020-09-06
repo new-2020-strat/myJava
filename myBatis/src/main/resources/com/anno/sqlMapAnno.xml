@@ -9,21 +9,17 @@
     <settings>
         <!--开启二级缓存-->
         <setting name="cacheEnabled" value="true"/>
-        <!--开启mybatis支持全局延迟加载-->
-        <setting name="lazyLoadingEnabled" value="true"/>
-        <!--默认为false,不写效果一样-->
-        <setting name="aggressiveLazyLoading" value="false"/>
     </settings>
     <!-- typeAliases标签配置别名-->
     <typeAliases>
-        <package name="com.multilist.entity"/>
+        <package name="com.anno.entity"></package>
     </typeAliases>
     <!-- 环境配置-->
     <environments default="mysql">
         <!--配置mysql环境 -->
         <environment id="mysql">
-            <!--配置事物的类型-->
-            <transactionManager type="jdbc"/>
+            <!--配置事务的类型-->
+            <transactionManager type="jdbc"></transactionManager>
             <!--配置数据源(连接池)-->
             <dataSource type="POOLED">
                 <!--连接数据库的4个基本信息-->
@@ -36,6 +32,7 @@
     </environments>
     <!--指定映射配置文件位置 映射配置文件即是建立每个dao独立的配置文件映射配置信息：-->
     <mappers>
-        <package name="com.multilist.dao"/>
+        <!--如果是注解开发，在接口实现配置中不能有相应的xml-->
+        <package name="com.anno.dao"/>
     </mappers>
 </configuration>

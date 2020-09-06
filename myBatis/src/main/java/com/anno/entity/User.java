@@ -1,18 +1,26 @@
-package com.multilist.entity;
+package com.anno.entity;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class User implements Serializable {
+public class User {
     public Integer id;
     public String userName;
     public Date birthday;
     public char sex;
     public String address;
 
-    //一对多的数据封装，一个用户有多个账户是账户的集合
-    private List<Account> accounts;
+    //查询所有用户并且带有所有账户信息，一对多关系
+    List<Account> accounts;
+
+
+    public List<Account> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
+    }
 
     public Integer getId() {
         return id;
@@ -54,14 +62,6 @@ public class User implements Serializable {
         this.address = address;
     }
 
-    public List<Account> getAccounts() {
-        return accounts;
-    }
-
-    public void setAccounts(List<Account> accounts) {
-        this.accounts = accounts;
-    }
-
     @Override
     public String toString() {
         return "User{" +
@@ -70,7 +70,6 @@ public class User implements Serializable {
                 ", birthday=" + birthday +
                 ", sex=" + sex +
                 ", address='" + address + '\'' +
-                ", accounts=" + accounts +
                 '}';
     }
 }

@@ -84,4 +84,16 @@ public class AccountMain {
         }
     }
 
+    /**
+     * 查询所有账户并且带有该账户的所属用户所有信息(延迟加载)
+     */
+    @Test
+    public void testSelectAllAccountWithAllUserBuffer(){
+        List<Account> accounts = iAccountDao.selectAllAccountWithAllUserBuffer();
+        /*for (Account account:accounts){
+            System.out.println(account);
+            System.out.println(account.getUser());
+        }*/
+    }
+
 }

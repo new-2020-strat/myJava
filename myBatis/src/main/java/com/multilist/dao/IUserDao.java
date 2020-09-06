@@ -19,4 +19,17 @@ public interface IUserDao {
      * 一对多，一个用户有多个账户的查询所有用户
      */
     public List<User> selectAllUserWithAllAccount();
+
+    /**
+     * 一对多，一个用户有多个账户的查询所有用户(一对多的延迟加载)
+     */
+    public List<User> selectAllUserWithAllAccountBuffer();
+
+    /**
+     * 查询所有测试二级缓存
+     * @return
+     */
+    public List<User> selectUsers();
+
+
 }

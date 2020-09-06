@@ -1,7 +1,9 @@
-package com.multilist;
+package com.anno;
 
-import com.multilist.entity.User;
-import com.multilist.dao.IUserDao;
+import com.anno.dao.IUserDao;
+import com.anno.dao.IUserDaoDiff;
+import com.anno.entity.User;
+import com.anno.entity.UserDiff;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -12,14 +14,18 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 
-public class UserMain {
+/**
+ * 注解开发测试
+ */
+public class AnnoDiffMain {
     private InputStream in;
     private SqlSessionFactoryBuilder builder;
     private SqlSessionFactory factory;
     private SqlSession session;
-    private IUserDao iUserDao;
+    private IUserDaoDiff iUserDaoDiff;
     /**
      * 测试方法执行之前先执行
      * @throws IOException
@@ -27,16 +33,16 @@ public class UserMain {
     @Before
     public void init() throws IOException{
         //1.读取mybatis的配置文件
-        in = Resources.getResourceAsStream("com/multilist/sqlMapMultilist.xml");
+        in = Resources.getResourceAsStream("com\\anno\\sqlMapAnno.xml");
         //2.创建SqlSessionFactory工厂
         builder = new SqlSessionFactoryBuilder();
         factory = builder.build(in);
         //3.使用工厂生产SqlSession对象
         session = factory.openSession();//传入一个true值可设为事务自动提交
         //4.使用SqlSession创建Dao接口的代理对象
-        iUserDao = session.getMapper(IUserDao.class);
-    }
+        iUserDaoDiff = session.getMapper(IUserDaoDiff.class);
 
+    }
     /**
      * 测试方法执行之后执行
      * @throws IOException
@@ -49,37 +55,22 @@ public class UserMain {
     }
 
     /**
-     * 一对多，一个用户有多个账户的查询所有用户
+     * 测试查询全部
      */
     @Test
-    public void testSelectAllUserWithAllAccount(){
-        List<User> users = iUserDao.selectAllUserWithAllAccount();
-        for (User user:users){
+    public void testfindAll(){
+        List<UserDiff> users = iUserDaoDiff.findAll();
+        for (UserDiff user: users){
             System.out.println(user);
-            System.out.println("-----");
-            System.out.println(user.getAccounts());
         }
     }
-
     /**
-     * 通过id查询用户
+     * 通过id查询一条
      */
     @Test
-    public void testSelectUserById(){
-        User user = iUserDao.selectById(26);
+    public void testFindById(){
+        UserDiff user = iUserDaoDiff.findUserById(26);
         System.out.println(user);
     }
 
-    /**
-     * 一对多，一个用户有多个账户的查询所有用户(一对多延迟加载)
-     */
-    @Test
-    public void testSelectAllUserWithAllAccountBuffer(){
-        List<User> users = iUserDao.selectAllUserWithAllAccountBuffer();
-        /*for (User user:users){
-            System.out.println(user);
-            System.out.println("-----");
-            System.out.println(user.getAccounts());
-        }*/
-    }
 }

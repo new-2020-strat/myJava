@@ -3,12 +3,20 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.multilist.dao.IUserDao">
+    <!--开启user使用二级缓存-->
+    <cache/>
+
+    <!--测试二级缓存-->
+    <select id="selectUsers" resultType="user" useCache="true">
+        select useCache.* from user useCache;
+    </select>
+
     <!--查询-->
     <select id="selectAllUser" resultType="user">
         select * from  user;
     </select>
     <!--通过id查询-->
-    <select id="selectAll" parameterType="INT" resultType="user">
+    <select id="selectById" parameterType="INT" resultType="user">
         select * from  user where id = #{id};
     </select>
 
@@ -28,5 +36,19 @@
             <result property="uid" column="uid"/>
             <result property="money" column="money"/>
         </collection>
+    </resultMap>
+
+    <!--一对多，一个用户有多个账户的查询所有用户(延迟加载)-->
+    <select id="selectAllUserWithAllAccountBuffer" resultMap="UserWithAllAccountBuffer">
+        select * from user;
+    </select>
+    <resultMap id="UserWithAllAccountBuffer" type="user">
+        <id property="id" column="id"/>
+        <result property="userName" column="username"/>
+        <result property="birthday" column="birthday"/>
+        <result property="sex" column="sex"/>
+        <result property="address" column="address"/>
+        <!--配置User实体中accounts集合的映射-->
+        <collection property="accounts" ofType="account" select="com.multilist.dao.IAccountDao.selectAccountById" column="id"/>
     </resultMap>
 </mapper>
