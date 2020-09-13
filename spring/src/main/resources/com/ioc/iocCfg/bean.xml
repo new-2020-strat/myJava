@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--把对象的创建交给spring处理
+    spring对bean的管理细节：
+       1. 创建bean的三种方式
+       2. bean对象的作用范围
+       3 bean对象的生命周期
+   创建bean的三种方式：
+       1.使用默认构造函数创建：
+            在spring配置文件中使用bean标签，配以id和class属性，并且没有其他属性和标签
+            若类中没有默认构造函数，则对象无法创建
+            <bean id="" class=""></bean>
+       2.使用工厂中的方法创建对象，并存入spring容器(使用某个类中的方法创建对象)
+            <bean id="id1" class="class1"></bean>
+            <bean id="id2" factory-bean="id1" factory-method="工厂类class1中创建对象的方法"></bean>
+       3.使用工厂中的静态方法创建对象，并存入spring容器
+            <bean id="" class="" factory-method=""></bean>
+   bean的作用范围：
+        bean标签的scope属性
+            作用：用于指定bean的作用范围
+            取值：singleton        单例(默认值)
+                  prototype        多例模式
+                  request          作用于web应用的请求范围
+                  session          作用于web应用的会话范围
+                  global-session   作用于集群环境的会话范围(全局)，若不是集群则是session
+    bean对象的生命周期
+        单例：
+            出生：  当容器创建时
+            活着：  当容器存在，就一直活着
+            死亡：  容器销毁，对象死亡
+        多例：
+            出生：  当我们使用对象时spring为我们创建对象
+            活着：   对象在使用过程中一直活着
+            死亡：   当对象长时间没有使用并且没有被其他对象引用时，由Java的垃圾回收机制回收
+    -->
+
+    <!--spring的依赖注入
+    依赖注入：dependency Injection
+    ioc的作用：降低程序之间的耦合(依赖关系)
+    依赖关系的管理：以后都交给了spring来管理，在当前类需要使用其他类时
+                    都要spring给我们提供，我们只需在配置文件中说明
+    依赖关系的维护：就叫做依赖注入
+                    能注入的数据有三类：基本类型和String
+                                        其他bean类型(在配置文件中和注解配置过bean)
+                                        复杂类型/集合类型
+                       注入方式有三种： 使用构造函数注入
+                                       使用set方法注入
+                                       使用注解方式注入
+    1.使用构造函数注入：使用标签：    constructor-arg
+                      使用位置：    bean标签内部
+                      标签中的属性：   type：用于指定要注入的数据类型，改数据类型也是构造函数中的一个或者某些参数的数据类型
+                                     index：用于指定要注入的数据给构造函数指定索引位置的参数赋值，索引位置从0开始
+                                      name：用于指定构造函数中指定名称的参数赋值(常用)
+                          ******************************以上三个都是指定给构造函数哪个参数赋值*********************************
+                                     value：用于提供基本类型和String类型的数据
+                                     ref：  用于指定其他的bean类型数据，即是在ioc核心容器中出过的bean对象
+                     使用构造函数注入的弊端与优势：
+                        在获取bean对象时，注入数据是必须的操作，否则对象无法创建
+                        改变了bean对象创建的方式，使我们在创建对象时，如果用不到这些数据也要注入数据
+
+    2.set方式注入(更常用方式)：使用标签：     property
+             使用位置：     bean标签内部
+             标签中的属性： name：用于指定注入时所调用的set方法名
+                          value：用于提供基本类型和String类型的数据
+                            ref：  用于指定其他的bean类型数据，即是在ioc核心容器中出过的bean对象
+        set注入的优势：创建对象时没有明确的限制，可以直接使用默认构造函数
+                 弊端：如果某个成员必须有值，则set注入无法保证一定注入
+
+    3.使用注解提供
+    -->
+    <bean id="accountService" class="com.ioc.iocCfg.service.impl.AccountService"/>
+    <bean id="accountDao" class="com.ioc.iocCfg.dao.impl.AccountDao"/>
+
+    <!--使用默认构造函数创建bean,单例,使用构造器方式注入属性-->
+    <bean id="defaultConstructor" class="com.ioc.iocCfg.util.TestDefaultConstructor" scope="singleton">
+        <constructor-arg name="name" value="老祁"/>
+        <constructor-arg name="age" value="26"/>
+        <constructor-arg name="birthday" ref="now"/>
+    </bean>
+    <!--在容器中配置注册一个日期对象-->
+    <bean id="now" class="java.util.Date"/>
+    <!--使用工厂中的方法创建bean,多例,使用set方式注入属性-->
+    <bean id="FactoryMethod" class="com.ioc.iocCfg.util.TestFactoryMethod"/>
+    <bean id="factoryMethod" factory-bean="FactoryMethod" factory-method="getTestFactoryMethod" scope="prototype">
+        <property name="name" value="老祁"/>
+        <property name="age" value="18"/>
+        <property name="birthday" ref="now"/>
+    </bean>
+    <!--使用工厂中的静态方法创建bean,复杂类型/集合类型注入 ：结构相同，提示：使用的标签相同-->
+    <bean id="staticMethod" class="com.ioc.iocCfg.util.TestStaticMethod" factory-method="getTestStaticMethod">
+        <property name="mystr">
+            <array>
+                <value>老祁</value>
+                <value>老吕</value>
+                <value>老李</value>
+            </array>
+        </property>
+        <property name="myList">
+            <list>
+                <value>老祁</value>
+                <value>老吕</value>
+                <value>老李</value>
+            </list>
+        </property>
+        <property name="mySet">
+            <set>
+                <value>老祁</value>
+                <value>老吕</value>
+                <value>老李</value>
+            </set>
+        </property>
+        <property name="myMap">
+            <map>
+                <entry key="name" value="老祁"/>
+                <entry key="age">
+                    <value>18</value>
+                </entry>
+            </map>
+        </property>
+        <property name="myPro">
+            <props>
+                <prop key="name">老吕</prop>
+                <prop key="age">90</prop>
+            </props>
+        </property>
+    </bean>
+
+</beans>

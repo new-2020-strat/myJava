@@ -1,0 +1,73 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--配置数据源-->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://192.168.1.8:3306/qilvbin"/>
+        <property name="username" value="root"/>
+        <property name="password" value="Root@1314!"/>
+    </bean>
+    <!--创建jdbcTemplate对象-->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!--配置持久层实现类-->
+    <bean id="accountDao" class="com.transaction.xml.transferManager.dao.imple.AccountDaoImple">
+        <property name="jdbcTemplate" ref="jdbcTemplate"></property>
+    </bean>
+    <!--配置业务层-->
+    <bean id="accountService" class="com.transaction.xml.transferManager.service.imple.AccountServiceImple">
+        <property name="dao" ref="accountDao"/>
+    </bean>
+
+    <!--spring基于xml的声明式事务控制配置步骤
+    1.配置事务管理器
+    2.配置事物的通知
+        需要导入事务约束,tx名称空间和约束，aop的约束
+        用tx:advice配置事物的通知
+        属性：
+            id：给事务通知去一个唯一标志
+            transaction-manager：给事务通知引用一个事务管理器
+    3.配置aop切入点通用表达式
+    4.建立事务通知和切入点表达式的对应关系
+    5.配置事务的属性
+        实在事务通知tx:advice中配置
+    -->
+    <!--配置事务管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+    <!--配置事务的通知-->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <!--配置事物的属性-->
+        <tx:attributes>
+            <!--isolation:用于指定事务的隔离级别，默认值是default，表示使用数据库的隔离级别
+            propagation：用于指定事务的传播行为，默认值是REQUIRED，表示一定会有事务，CRUD的选择，查询可以选SUPPORT
+            read-only：用于指定事务是否只读，只有查询才能设置为true，默认值是false，表示读写
+            timeout：表示事务的超时时间，默认值是-1，表示永不超时，如果指定数值，则以秒为单位
+            rollback-for：用于指定一个异常，产生该异常时事务回滚，产生其他异常时事务不回滚，没有默认值，表示任何异常都回滚
+            no-rollback-for：用于指定一个异常，除了该异常不回滚，其他都回滚，没有默认值，表示任何异常都回滚
+            -->
+            <tx:method name="transfer" propagation="REQUIRED" read-only="false"/>
+            <!-- <tx:method name="find*" propagation="REQUIRED" read-only="true"></tx:method>-->
+        </tx:attributes>
+    </tx:advice>
+    <!--配置aop-->
+    <aop:config>
+        <!--配置切点表达式-->
+        <aop:pointcut id="pt1" expression="execution(public void com.transaction.xml.transferManager.service.imple.AccountServiceImple.transfer(..))"></aop:pointcut>
+        <!--建立事务通知和切入点表达式的对应关系-->
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="pt1"></aop:advisor>
+    </aop:config>
+
+</beans>
