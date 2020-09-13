@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+        <!--开启注解扫描-->
+    <context:component-scan base-package="com"/>
+    <!--配置视图解析器-->
+    <bean id="internalResourceViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/pages/start/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <!--配置自定义数据类型转换器,在开启注解支持设置属性conversion-service使其生效-->
+    <bean id="conversionServiceFactoryBean" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="com.bindData.utils.StringToDateConverter"></bean>
+            </set>
+        </property>
+    </bean>
+    <!--配置文件上传的解析器-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!--最大上传文件大小，单位字节-->
+        <property name="maxUploadSize" value="1024"/>
+    </bean>
+
+    <!--配置异常解析器-->
+    <bean id="SystemExceptionResolver" class="com.responseType.utils.defineException.SystemExceptionResolver"/>
+
+    <!--配置拦截器-->
+    <mvc:interceptors>
+        <!--第1个拦截器-->
+        <mvc:interceptor>
+            <!--配置要拦截的具体方法-->
+            <mvc:mapping path="/**"/>
+            <!--配置不要拦截的方法-->
+            <!--<mvc:exclude-mapping path=""/>-->
+            <!--注入拦截器-->
+            <bean id="testIntercepter" class="com.responseType.utils.intercepter.TestIntercepter"/>
+        </mvc:interceptor>
+        <!--第2个拦截器-->
+        <mvc:interceptor>
+            <!--配置要拦截的具体方法-->
+            <mvc:mapping path="/**"/>
+            <!--配置不要拦截的方法-->
+            <!--<mvc:exclude-mapping path=""/>-->
+            <!--注入拦截器-->
+            <bean id="testIntercepter22" class="com.responseType.utils.intercepter.TestIntercepter22"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!--开启spring框架的注解支持 conversion-service属性是自定义类型装换器生效-->
+    <mvc:annotation-driven conversion-service="conversionServiceFactoryBean"/>
+
+</beans>
