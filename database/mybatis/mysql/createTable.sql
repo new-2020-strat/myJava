@@ -78,7 +78,7 @@ select * from customer;
 
 select r.id rid,r.role_name,r.role_desc,c.* from role r
 left outer join customer_role cr on r.id=cr.rid
-left outer join customer c on cr.cid=c.id
+left outer join customer c on cr.cid=c.id;
 
 select c.*, r.id rid,r.role_name,r.role_desc from customer c
 left outer join customer_role cr on c.id=cr.cid
@@ -94,6 +94,18 @@ create table student(
 )ENGINE = InnoDB default charset = utf8;
 insert into student(id, name, sex) VALUES (1,'小祁','男'),(2,'小李','女');
 select * from student;
+
+drop table if exists account_spring;
+create table account_spring(
+    id int(11) primary key auto_increment comment '编号',
+    uname varchar(40) default null comment '用户名',
+    money float default null comment '金额'
+) ENGINE = InnoDB default charset = utf8;
+
+insert into account_spring(uname, money) VALUES ('老祁',1000),('老吕',500);
+select * from account_spring;
+
+
 
 
 
