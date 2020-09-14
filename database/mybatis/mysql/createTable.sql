@@ -105,6 +105,23 @@ create table account_spring(
 insert into account_spring(uname, money) VALUES ('老祁',1000),('老吕',500);
 select * from account_spring;
 
+use qilvbin;
+
+
+#创建账户表(用于ssm整合测试)
+drop table if exists account_ssm;
+create table account_ssm(
+    id int(11) not null comment '编号',
+    name varchar(20) default null comment '用户名',
+    money double default null comment '金额',
+    primary key (id)
+) ENGINE = InnoDB default charset = utf8;
+select * from account_ssm;
+
+insert into account_ssm(id, name, money) VALUES (1,'老祁',100),(2,'老吕',50);
+select * from account_ssm;
+
+
 
 
 

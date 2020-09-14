@@ -28,7 +28,7 @@
       <module name="springboot" target="1.8" />
       <module name="springMVC" target="1.8" />
       <module name="ssh" target="1.7" />
-      <module name="ssm" target="1.7" />
+      <module name="ssm" target="1.8" />
       <module name="struct2" target="1.7" />
     </bytecodeTargetLevel>
   </component>
