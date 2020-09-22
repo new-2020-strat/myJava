@@ -121,6 +121,9 @@ select * from account_ssm;
 insert into account_ssm(id, name, money) VALUES (1,'老祁',100),(2,'老吕',50);
 select * from account_ssm;
 
+select * from news;
+drop table news;
+
 
 
 
