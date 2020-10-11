@@ -2,17 +2,129 @@
 <!DOCTYPE hibernate-mapping PUBLIC
         "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<hibernate-mapping>
+
+<!-- 1.POJO 类和关系数据库之间的映射可以用一个XML文档来定义。
+     2.通过 POJO 类的数据库映射文件，Hibernate可以理解持久化类和数据表之间的对应关系，也可以理解持久化类属性与数据库表列之间的对应关系
+     3.在运行时 Hibernate 将根据这个映射文件来生成各种 SQL 语句
+     3映射文件的扩展名为 .hbm.xml
+-->
+<!--hibernate-mapping
+    类层次：class
+        主键：id
+        基本类型:property
+        实体引用类: many-to-one  |  one-to-one
+        集合:set | list | map | array
+            one-to-many
+            many-to-many
+        子类:subclass | joined-subclass
+        其它:component | any 等
+    查询语句:query(用来放置查询语句，便于对数据库查询的统一管理和优化)
+    每个Hibernate-mapping中可以同时定义多个类. 但更推荐为每个类都创建一个单独的映射文件
+-->
+<!--
+    hibernate-mapping属性：
+        package(可选): 指定一个包前缀，如果在映射文档中没有指定全限定的类名， 就使用这个作为包名。
+        schema: 指定所映射的数据库schema的名称。若指定该属性, 则表明会自动添加该 schema 前缀
+        catalog:指定所映射的数据库catalog的名称。
+        default-cascade(默认为 none): 设置hibernate默认的级联风格. 若配置 Java 属性, 集合映射时没有指定 cascade 属性, 则 Hibernate 将采用此处指定的级联风格.
+        default-access (默认为 property): 指定 Hibernate 的默认的属性访问策略。默认值为 property, 即使用 getter, setter 方法来访问属性. 若指定 access, 则 Hibernate 会忽略 getter/setter 方法, 而通过反射访问成员变量.
+        default-lazy(默认为 true): 设置 Hibernat morning的延迟加载策略. 该属性的默认值为 true, 即启用延迟加载策略. 若配置 Java 属性映射, 集合映射时没有指定 lazy 属性, 则 Hibernate 将采用此处指定的延迟加载策略
+        auto-import (默认为 true): 指定是否可以在查询语言中使用非全限定的类名（仅限于本映射文件中的类）。
+-->
+<hibernate-mapping package="com.start.entity">
     <!--建立类和表的一个映射-->
-    <class name="com.start.entity.News" table="news">
+    <!--
+        class属性：
+            name:指定该持久化类映射的持久化类的类名
+            table:指定该持久化类映射的表名, Hibernate 默认以持久化类的类名作为表名
+            dynamic-insert: 若设置为 true, 表示当保存一个对象时, 会动态生成 insert 语句, insert 语句中仅包含所有取值不为 null 的字段. 默认值为 false
+            dynamic-update: 若设置为 true, 表示当更新一个对象时, 会动态生成 update 语句, update 语句中仅包含所有取值需要更新的字段. 默认值为 false
+            select-before-update:设置 Hibernate 在更新某个持久化对象之前是否需要先执行一次查询. 默认值为 false
+            batch-size:指定根据 OID 来抓取实例时每批抓取的实例数.
+            lazy: 指定是否使用延迟加载.
+            mutable: 若设置为 true, 等价于所有的 <property> 元素的 update 属性为 false, 表示整个实例不能被更新. 默认为 true.
+            discriminator-value: 指定区分不同子类的值. 当使用 <subclass/> 元素来定义持久化类的继承关系时需要使用该属性
+    -->
+    <class name="com.start.entity.News" table="news" >
         <!--实体类的属性与表中主键的映射-->
+        <!--
+            Hibernate 使用对象标识符(OID) 来建立内存中的对象和数据库表中记录的对应关系. 对象的 OID 和数据表的主键对应. Hibernate 通过标识符生成器来为主键赋值
+            Hibernate 推荐在数据表中使用代理主键, 即不具备业务含义的字段. 代理主键通常为整数类型, 因为整数类型比字符串类型要节省更多的数据库空间.
+            在对象-关系映射文件中, <id> 元素用来设置对象标识符. <generator> 子元素用来设定标识符生成器.
+            Hibernate 提供了标识符生成器接口: IdentifierGenerator, 并提供了各种内置实现
+
+            id的属性：
+                name: 标识持久化类 OID 的属性名
+                column: 设置标识属性所映射的数据表的列名(主键字段的名字).
+                unsaved-value:若设定了该属性, Hibernate 会通过比较持久化类的 OID 值和该属性值来区分当前持久化类的对象是否为临时对象
+                type:指定 Hibernate 映射类型. Hibernate 映射类型是 Java 类型与 SQL 类型的桥梁. 如果没有为某个属性显式设定映射类型, Hibernate 会运用反射机制先识别出持久化类的特定属性的 Java 类型, 然后自动使用与之对应的默认的 Hibernate 映射类型
+                Java 的基本数据类型和包装类型对应相同的 Hibernate 映射类型. 基本数据类型无法表达 null, 所以对于持久化类的 OID 推荐使用包装类型
+        -->
         <id name="id" type="java.lang.Integer" column="id">
-            <!--指定主键生成方法 native：使用数据库本地生成方式-->
+            <!--指定主键生成策略 native：使用数据库本地生成方式-->
+            <!--
+                generator：设定持久化类设定标识符生成器
+                class: 指定使用的标识符生成器全限定类名或其缩写名
+            -->
+            <!--主键生成器列举
+                increment 标识符生成器由 Hibernate 以递增的方式为代理主键赋值,Hibernate 会先读取 NEWS 表中的主键的最大值, 而接下来向 NEWS 表中插入记录时, 就在 max(id) 的基础上递增, 增量为 1.
+                identity 标识符生成器由底层数据库来负责生成标识符, 它要求底层数据库把主键定义为自动增长字段类型
+                sequence  标识符生成器利用底层数据库提供的序列来生成标识符.
+                hilo 标识符生成器由 Hibernate 按照一种 high/low 算法*生成标识符, 它从数据库的特定表的字段中获取 high 值.
+                native 标识符生成器依据底层数据库对自动生成标识符的支持能力, 来选择使用 identity, sequence 或 hilo 标识符生成器.
+                seqhilo
+                uuid.hex
+                uuid.string
+                assigned
+                foreign
+            -->
             <generator class="native"/>
         </id>
+        <!--
+            property属性：
+                name:指定该持久化类的属性的名字
+                column:指定与类的属性映射的表的字段名. 如果没有设置该属性, Hibernate 将直接使用类的属性名作为字段名.
+                type:指定 Hibernate 映射类型. Hibernate 映射类型是 Java 类型与 SQL 类型的桥梁. 如果没有为某个属性显式设定映射类型, Hibernate 会运用反射机制先识别出持久化类的特定属性的 Java 类型, 然后自动使用与之对应的默认的 Hibernate 映射类型.ppt69
+                not-null:若该属性值为 true, 表明不允许为 null, 默认为 false
+                access:指定 Hibernate 的默认的属性访问策略。默认值为 property, 即使用 getter, setter 方法来访问属性. 若指定 field, 则 Hibernate 会忽略 getter/setter 方法, 而通过反射访问成员变量
+                unique: 设置是否为该属性所映射的数据列添加唯一约束.
+                update: 表示这列的数据不能被修改
+                index: 指定一个字符串的索引名称. 当系统需要 Hibernate 自动建表时, 用于为该属性所映射的数据列创建索引, 从而加快该数据列的查询.
+                length: 指定该属性所映射数据列的字段的长度
+                scale: 指定该属性所映射数据列的小数位数, 对 double, float, decimal 等类型的数据列有效.
+                formula：设置一个 SQL 表达式, Hibernate 将根据它来计算出派生属性的值.
+                派生属性: 并不是持久化类的所有属性都直接和表的字段匹配, 持久化类的有些属性的值必须在运行时通过计算才能得出来, 这种属性称为派生属性
+                    使用 formula 属性时
+                    formula=“(sql)” 的英文括号不能少
+                    Sql 表达式中的列名和表名都应该和数据库对应, 而不是和持久化对象的属性对应
+                    如果需要在 formula 属性中使用参数, 这直接使用 where cur.id=id 形式, 其中 id 就是参数, 和当前持久化对象的 id 属性对应的列的 id 值将作为参数传入.
+        -->
         <property name="title" type="java.lang.String" column="title"/>
         <property name="author" type="java.lang.String" column="author"/>
         <property name="date" type="java.util.Date" column="date"/>
         <property name="desc" formula="(select concat(author,':',title) from news n where n.id = id)"/>
+        <!--
+        两个基础知识：
+            在 Java 中, 代表时间和日期的类型包括: java.util.Date 和 java.util.Calendar.
+            此外, 在 JDBC API 中还提供了 3 个扩展了 java.util.Date 类的子类: java.sql.Date, java.sql.Time 和 java.sql.Timestamp, 这三个类分别和标准 SQL 类型中的 DATE, TIME 和 TIMESTAMP 类型对应
+            在标准 SQL 中, DATE 类型表示日期, TIME 类型表示时间, TIMESTAMP 类型表示时间戳, 同时包含日期和时间信息.
+       如何映射
+            I. 因为 java.util.Date 是 java.sql.Date,java.sql.Time和java.sql.Timestamp的父类, 所以java.util.Date
+            可以对应标准 SQL 类型中的 DATE, TIME和TIMESTAMP
+            II. 基于I, 所以在设置持久化类的Date类型时,设置为java.util.Date.
+            III. 如何把 java.util.Date 映射为 DATE,TIME和TIMESTAMP ?
+            可以通过 property 的 type 属性来进行映射:
+            例如:
+            <property name="date" type="timestamp">
+                <column name="DATE" />
+            </property>
+            <property name="date" type="date">
+                <column name="DATE" />
+            </property>
+            <property name="date" type="time">
+                <column name="DATE" />
+            </property>
+            其中 timestamp, date, time 既不是 Java 类型, 也不是标准SQL类型, 而是 hibernate映射类型.
+        -->
     </class>
 </hibernate-mapping>
