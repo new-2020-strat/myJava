@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!--连接数据库的基本参数-->
+        <!--<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://192.168.1.8:3306/qilvbin</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password">Root@1314!</property>-->
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://192.168.1.9:3306/qilvbin</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password">QiLvBin@1314</property>
+        <!--配置hibernate的方言-->
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <!--打印sql语句-->
+        <property name="hibernate.show_sql">true</property>
+        <!--格式化sql语句-->
+        <property name="hibernate.format_sql">true</property>
+
+        <!--删除对象后把其OID置为null-->
+        <property name="use_identifier_rollback">true</property>
+        <!--自动创建表 指定自动生成表策略
+            取值：
+            create：根据hbm.xml文件生成表，但是每次都会先删除再创建表
+            create_drop：根据hbm.xml文件生成表，但是SessionFactory关闭表自动删除
+            update：最常用属性，根据hbm.xml文件生成表，但每次只会更新表结构和数据
+            validate:根据hbm.xml文件生成表，但是和数据库中的表作比较，如果不同则会抛出异常不会对表做任何改变
+            -->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <!--设置事务的隔离级别-->
+        <property name="hibernate.connection.isolation">4</property>
+
+
+        <!-- 配置 C3P0 数据源 -->
+        <!--数据库连接池的最大连接数-->
+        <property name="hibernate.c3p0.max_size">10</property>
+        <!--数据库连接池的最小连接数-->
+        <property name="hibernate.c3p0.min_size">5</property>
+        <!--当数据库连接池中的连接耗尽时, 同一时刻获取多少个数据库连接-->
+        <property name="c3p0.acquire_increment">2</property>
+        <!--表示连接池检测线程多长时间检测一次池内的所有链接对象是否超时. 连接池本身不会把自己从连接池中移除，
+        而是专门有一个线程按照一定的时间间隔来做这件事，这个线程通过比较连接对象最后一次被使用时间和当前时间
+        的时间差来和 timeout 做对比，进而决定是否销毁这个连接对象。-->
+        <property name="c3p0.idle_test_period">2000</property>
+        <!--数据库连接池中连接对象在多长时间没有使用过后，就应该被销毁-->
+        <property name="c3p0.timeout">2000</property>
+        <!--缓存 Statement 对象的数量-->
+        <property name="c3p0.max_statements">10</property>
+        <!-- 设定 JDBC 的 Statement 读取数据的时候每次从数据库中取出的记录条数 -->
+        <property name="hibernate.jdbc.fetch_size">100</property>
+        <!-- 设定对数据库进行批量删除，批量更新和批量插入的时候的批次大小 -->
+        <property name="jdbc.batch_size">30</property>
+
+        <!--配置当前线程绑定session-->
+       <!-- <property name="hibernate.current_session_context_class">thread</property>-->
+        <!--配置映射文件 指定关联文件(表和实体类的映射)-->
+        <mapping resource="com/start/config/news.hbm.xml"/>
+        <mapping resource="com/start/config/work.hbm.xml"/>
+
+    </session-factory>
+</hibernate-configuration>
+<!--
+1.hibernate配置文件主要用于配置数据库连接信息和Hibernate运行时所需要的各种属性值
+2.每个hibernate配置文件对应一个Configuration对象
+3.Hibernate配置文件可以有hibernate.properties和hibernate.xml
+-->
